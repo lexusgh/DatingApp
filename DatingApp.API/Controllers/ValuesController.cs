@@ -27,6 +27,7 @@ namespace DatingApp.API.Controllers
         // {
         //     return _context.Value.ToList();
         // }
+        [AllowAnonymous]
         public async Task<IActionResult> Values()
         {
             return Ok(await _context.Value.ToListAsync());
