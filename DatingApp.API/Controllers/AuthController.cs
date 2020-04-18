@@ -61,6 +61,7 @@ namespace DatingApp.API.Controllers
          [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto login)
         {
+            
             //Check if user exists
             var user = await _repo.Login(login.username.ToLower(),login.password);
 
