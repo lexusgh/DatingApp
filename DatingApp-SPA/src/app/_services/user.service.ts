@@ -22,4 +22,7 @@ getUser(id): Observable<User> {
   return this.http.get<User>(this.baseUrl + 'getuser/' + id);
 }
 
+updateUser(id: number, user: User) {
+  return this.http.put(this.baseUrl + 'updateuser/' + id, user);
+}
 }

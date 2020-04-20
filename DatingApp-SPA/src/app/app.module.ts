@@ -22,17 +22,16 @@ import { MemberCardComponent } from './members/member-card/member-card.component
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 import { MemberListResolver } from './_resolvers/member-list.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+import { AuthGuard } from './_guards/auth.guard';
+import { PreventUnsavedChanges } from './_guards/preventunsavedchanges.guard';
 
 
 export function tokenGetter() {
    return localStorage.getItem('token');
 }
-// export class CustomHammerConfig extends HammerGestureConfig {
-//    overrides = {
-//       pinch: {enable: false},
-//       rotate: {enable: false},
-//    };
-// }
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -44,6 +43,7 @@ export function tokenGetter() {
       MessagesComponent,
       MemberCardComponent,
       MemberDetailComponent,
+      MemberEditComponent
 
    ],
    imports: [
@@ -65,9 +65,12 @@ export function tokenGetter() {
    providers: [
       AuthService,
       ErrorInterceptorProvider,
+      AuthGuard,
       MemberDetailResolver,
       MemberListResolver,
-      // {provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig}
+      MemberEditResolver,
+      PreventUnsavedChanges,
+ 
    ],
    bootstrap: [
       AppComponent
