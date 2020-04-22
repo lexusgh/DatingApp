@@ -16,6 +16,7 @@ using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace DatingApp.API.Controllers
 {
@@ -26,46 +27,50 @@ namespace DatingApp.API.Controllers
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
 
-        public AuthController(IAuthRepository repo,IConfiguration config)
+
+        private readonly IMapper _mapper;
+
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
-                    _repo = repo;
-                    _config = config;
-            
+            _mapper = mapper;
+            _repo = repo;
+            _config = config;
+       
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto register)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-               
+
             //validate request
 
-            register.Username=register.Username.ToLower();
+            register.Username = register.Username.ToLower();
 
-            if(await _repo.UserExists(register.Username))
+            if (await _repo.UserExists(register.Username))
                 return BadRequest("User already exists!");
 
-            var userToCreate =new User 
+            var userToCreate = new User
             {
                 Username = register.Username
-                
+
             };
 
-            var createdUser = await _repo.Register(userToCreate,register.Password); 
+            var createdUser = await _repo.Register(userToCreate, register.Password);
 
             return StatusCode(201);
         }
 
 
-         [HttpPost("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto login)
         {
-            
-            //Check if user exists
-            var user = await _repo.Login(login.username.ToLower(),login.password);
 
-            if(user == null)
+            //Check if user exists
+            var user = await _repo.Login(login.username.ToLower(), login.password);
+
+            if (user == null)
                 //return BadRequest("Invalid Login!");
                 return Unauthorized();
 
@@ -78,20 +83,23 @@ namespace DatingApp.API.Controllers
             //Get Secret Key
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
 
-            var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDesc = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
-                SigningCredentials  = creds
+                SigningCredentials = creds
 
             };
 
-            var tokenHandler  = new JwtSecurityTokenHandler();
+            var userdt = _mapper.Map<UserDto>(user);
+            var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDesc);
-            return Ok(new{
-                token = tokenHandler.WriteToken(token)
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token),
+                userdt
             });
 
         }
