@@ -1,6 +1,6 @@
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule} from '@angular/core';
+import { NgModule, Pipe} from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -8,6 +8,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule} from 'ngx-bootstrap';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
+import {TimeAgoPipe} from 'time-ago-pipe';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -34,7 +35,12 @@ import { FileUploadModule } from 'ng2-file-upload';
 
 
 
-
+// tslint:disable-next-line: use-pipe-transform-interface
+@Pipe({
+   name: 'timeAgo',
+   pure: false
+})
+export default class TimeAgoExtendsPipe extends TimeAgoPipe {}
 export function tokenGetter() {
    return localStorage.getItem('token');
 }
@@ -51,7 +57,8 @@ export function tokenGetter() {
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      TimeAgoExtendsPipe
 
    ],
    imports: [
@@ -82,7 +89,6 @@ export function tokenGetter() {
       MemberListResolver,
       MemberEditResolver,
       PreventUnsavedChanges,
- 
    ],
    bootstrap: [
       AppComponent
