@@ -33,6 +33,9 @@ import { AuthGuard } from './_guards/auth.guard';
 import { PreventUnsavedChanges } from './_guards/preventunsavedchanges.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { ListsResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 
 
@@ -60,7 +63,8 @@ export function tokenGetter() {
       MemberDetailComponent,
       MemberEditComponent,
       PhotoEditorComponent,
-      TimeAgoExtendsPipe
+      TimeAgoExtendsPipe,
+      MemberMessagesComponent
 
    ],
    imports: [
@@ -92,6 +96,8 @@ export function tokenGetter() {
       MemberDetailResolver,
       MemberListResolver,
       MemberEditResolver,
+      MessagesResolver,
+      ListsResolver,
       PreventUnsavedChanges,
    ],
    bootstrap: [
