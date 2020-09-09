@@ -14,7 +14,7 @@ import { AlertifyService } from '../_services/alertify.service';
 export class MessagesComponent implements OnInit {
   messages: Message[];
   pagination: Pagination;
-  messageContainer: 'Unread';
+  messageContainer: string;
   constructor(private userService: UserService, private authService: AuthService,
               private route: ActivatedRoute, private alertify: AlertifyService) { }
 
@@ -26,6 +26,7 @@ export class MessagesComponent implements OnInit {
   }
 
   loadMessages() {
+    this.messageContainer = 'Unread';
     this.userService.getMessages(this.authService.decodedToken.nameid, this.pagination.currentPage,
       this.pagination.itemsPerPage, this.messageContainer).subscribe((res: PaginatedResult<Message[]>) => {
         this.messages = res.result;
